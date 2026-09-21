@@ -81,8 +81,32 @@ x-airflow-common:
       condition: service_healthy
     postgres:
       condition: service_healthy
+    localstack:
+      condition: service_healthy
 
 services:
+  localstack:
+    image: localstack/localstack:3.8.1
+    environment:
+      # Community edition: S3 is fully emulated. Redshift cluster
+      # provisioning/queries are a LocalStack Pro feature, so use the
+      # postgres service above (Redshift is Postgres-compatible) for
+      # local Redshift SQL testing instead.
+      SERVICES: s3
+      DEBUG: 0
+      PERSISTENCE: 1
+    ports:
+      - "4566:4566"
+    volumes:
+      - localstack-data:/var/lib/localstack
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost:4566/_localstack/health"]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+      start_period: 15s
+    restart: always
+
   postgres:
     image: postgres:13
     environment:
@@ -281,3 +305,4 @@ services:
 
 volumes:
   postgres-db-volume:
+  localstack-data:
