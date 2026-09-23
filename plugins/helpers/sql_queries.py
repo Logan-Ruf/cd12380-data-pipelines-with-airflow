@@ -57,4 +57,7 @@ class SqlQueries:
                extract(month from start_time), extract(year from start_time), extract(dayofweek from start_time)
         FROM songplays
     """
+    qc_rows_exist = """
+        SELECT EXISTS(SELECT 1 FROM {table})::int;
+    """
 

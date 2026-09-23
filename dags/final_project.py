@@ -97,6 +97,54 @@ def final_project():
 
     run_quality_checks = DataQualityOperator(
         task_id="Run_data_quality_checks",
+        redshift_conn_id="redshift",
+        qc_queries=[
+            {
+                "query": SqlQueries.qc_rows_exist,
+                "table": "artists",
+                "expected": 1,
+            },
+            {
+                "query": SqlQueries.qc_rows_exist,
+                "table": "songplays",
+                "expected": 1,
+            },
+            {
+                "query": SqlQueries.qc_rows_exist,
+                "table": "songs",
+                "expected": 1,
+            },
+            {
+                "query": SqlQueries.qc_rows_exist,
+                "table": "staging_events",
+                "expected": 1,
+            },
+            {
+                "query": SqlQueries.qc_rows_exist,
+                "table": "staging_songs",
+                "expected": 1,
+            },
+            {
+                "query": SqlQueries.qc_rows_exist,
+                "table": "time",
+                "expected": 1,
+            },
+            {
+                "query": SqlQueries.qc_rows_exist,
+                "table": "users",
+                "expected": 1,
+            },
+            {
+                "query": SqlQueries.qc_rows_exist,
+                "table": "artists WHERE name IS NULL",
+                "expected": 0,
+            },
+            {
+                "query": SqlQueries.qc_rows_exist,
+                "table": "songplays WHERE songid IS NULL or artistid IS NULL",
+                "expected": 0,
+            },
+        ],
     )
 
     start_operator >> stage_events_to_redshift >> load_songplays_table
