@@ -4,11 +4,12 @@ class SqlQueries:
         FROM '{}'
         ACCESS_KEY_ID '{}'
         SECRET_ACCESS_KEY '{}'
+        {}
         JSON '{}'
     """
 
     truncate = """
-        TRUNCATE FROM {table}
+        DELETE FROM {table}
     """
 
     insert_template = """

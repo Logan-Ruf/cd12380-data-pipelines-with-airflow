@@ -51,9 +51,10 @@ class DataQualityOperator(BaseOperator):
                 continue
 
         if failures:
+            failure_list = "\n".join(failures)
             raise ValueError(
                 f"Data quality check(s) failed "
-                f"({len(failures)} of {len(self.qc_queries)}):\n{'\n'.join(failures)}"
+                f"({len(failures)} of {len(self.qc_queries)}):\n{failure_list}"
             )
 
         self.log.info("All data quality checks passed")

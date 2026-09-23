@@ -4,14 +4,13 @@ import pendulum
 from airflow.decorators import dag
 from airflow.models import Variable
 from airflow.operators.dummy import DummyOperator
+from helpers.sql_queries import SqlQueries
 from operators import (
     DataQualityOperator,
     LoadDimensionOperator,
     LoadFactOperator,
     StageToRedshiftOperator,
 )
-
-from plugins.helpers.sql_queries import SqlQueries
 
 default_args = {
     "owner": "chris-ruf",
@@ -42,7 +41,8 @@ def final_project():
         aws_credentials_id="aws_credentials",
         table="staging_events",
         s3_bucket=s3_bucket,
-        s3_key="log_data/{{ execution_date.year }}/{{ '%02d'|format(execution_date.month) }}/{{ execution_date.year }}-{{ '%02d'|format(execution_date.month) }}-{{ '%02d'|format(execution_date.day) }}-events.json",
+        # s3_key="log_data/{{ execution_date.year }}/{{ '%02d'|format(execution_date.month) }}/{{ execution_date.year }}-{{ '%02d'|format(execution_date.month) }}-{{ '%02d'|format(execution_date.day) }}-events.json",
+        s3_key="log-data",
         json=f"s3://{s3_bucket}/log_json_path.json",
     )
 
@@ -52,7 +52,7 @@ def final_project():
         aws_credentials_id="aws_credentials",
         table="staging_songs",
         s3_bucket=s3_bucket,
-        s3_key="song_data",
+        s3_key="song-data",
         json="auto",
     )
 
@@ -75,7 +75,7 @@ def final_project():
         task_id="Load_song_dim_table",
         redshift_conn_id="redshift",
         table="songs",
-        sql_query=SqlQueries.user_table_insert,
+        sql_query=SqlQueries.song_table_insert,
         truncate=True,
     )
 
