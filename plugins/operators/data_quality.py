@@ -49,9 +49,15 @@ class DataQualityOperator(BaseOperator):
             if actual != expected:
                 failures.append(f"{description}: expected {expected}, got {actual}")
                 continue
+            self.log.info(f"Data quality {description} passed.")
 
         if failures:
             failure_list = "\n".join(failures)
+            failure_msg = (
+                f"Data quality check(s) failed "
+                f"({len(failures)} of {len(self.qc_queries)}):\n{failure_list}"
+            )
+            self.log.error(failure_msg)
             raise ValueError(
                 f"Data quality check(s) failed "
                 f"({len(failures)} of {len(self.qc_queries)}):\n{failure_list}"

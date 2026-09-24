@@ -29,6 +29,7 @@ class LoadDimensionOperator(BaseOperator):
         if self.truncate:
             self.log.info(f"Truncating dimension table {self.table}")
             redshift.run(SqlQueries.truncate.format(table=self.table))
+            self.log.info(f"{self.table} truncated successfully")
 
         self.log.info(f"Inserting into dimension table {self.table}")
         redshift.run(
@@ -37,3 +38,4 @@ class LoadDimensionOperator(BaseOperator):
                 query=self.sql_query,
             )
         )
+        self.log.info(f"{self.table} inserted successfully")

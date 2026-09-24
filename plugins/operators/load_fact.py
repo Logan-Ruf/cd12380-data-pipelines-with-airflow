@@ -29,6 +29,7 @@ class LoadFactOperator(BaseOperator):
         if self.truncate:
             self.log.info(f"Truncating fact table {self.table}")
             redshift.run(SqlQueries.truncate.format(table=self.table))
+            self.log.info(f"{self.table} truncated successfully")
 
         self.log.info(f"Inserting into fact table {self.table}")
         redshift.run(
@@ -37,3 +38,4 @@ class LoadFactOperator(BaseOperator):
                 query=self.sql_query,
             )
         )
+        self.log.info(f"{self.table} inserted successfully")
